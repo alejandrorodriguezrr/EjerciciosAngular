@@ -1,68 +1,43 @@
-from functools import total_ordering
+class Producto:
+    contador = 0
 
+    def __init__(self):
+        Producto.contador += 1
+        self.codigo = f"VG{Producto.contador:03d}"
+        self.nombre = ""
 
-class Producto():
+    def pedirDatos(self):
+        self.nombre = input("Ingrese el nombre del producto: ").strip()
 
-    contador=0
-    def pedirdatos(self):
-        Producto.contador=Producto.contador+1
-        codigo=f"VG{Producto.contador:03d}"
-        nombre=input("Ingrese el nombre del videojuego: ")
-
-        return codigo,nombre
 
 class Videojuego(Producto):
+    def __init__(self):
+        super().__init__()
+        self.plataforma = ""
+        self.stock = {}  # diccionario: ciudad -> unidades
 
-    def pedirdatos(self):
-        codigo, nombre=super().pedirdatos()
-        plataforma=input("Ingrese la plataforma del videojuego: ")
-        stock_por_tienda={}
-        num_ciudades=int(input("Ingrese el numero de ciudades que quieres añadir: "))
+    def crearVideojuego(self):
+        super().pedirDatos()
+        self.plataforma = input("Ingrese el nombre de la plataforma: ").strip()
 
-        for ciudad in range(num_ciudades):
-            nom_ciudad=input("Ingrese el nombre del ciudad: ")
-            stock=int(input("Ingrese el numero de stock de esa ciudad: "))
-            stock_por_tienda[nom_ciudad]=stock
+        num_ciudades = int(input("Ingrese el numero de ciudades: "))
 
-        videojuego = [codigo, nombre, plataforma, stock_por_tienda]
-        return videojuego
+        for i in range(num_ciudades):
+            nom_ciudad = input("Ingrese el nombre de la ciudad: ").strip()
+            unidades = int(input("Ingrese el numero de stock: "))
+            self.stock[nom_ciudad] = unidades
 
-    def mostrar(self, videojuego):
-        print("Videojuego(")
-        print(f"  codigo='{videojuego[0]}',")
-        print(f"  nombre='{videojuego[1]}',")
-        print(f"  plataforma='{videojuego[2]}',")
-        print(f"  stock_por_tienda={videojuego[3]}")
-        print(")")
+        return self  # devuelve el objeto ya relleno
 
-    def opcion2(self, videojuego):
-        cod=input("Ingrese el codigo del videojuego: ")
-        total=0
+inventario = []
 
+cantidad = int(input("¿Cuántos videojuegos quieres añadir? "))
 
+for i in range(cantidad):
+    v = Videojuego()
+    v.crearVideojuego()
+    inventario.append(v)
 
-
-
-
-
-def menu():
-    inventario=[]
-    vg = Videojuego()
-
-    while True:
-        print("=== MENU ===")
-        print("[1] Registrar")
-        print("[2] Calcular")
-        print("[3] Eliminar")
-        print("[4] Stock")
-        print("[5] Listado")
-        print("[6] Salir")
-        print("")
-        opcion=int(input("Ingrese su opcion: "))
-
-        if opcion==1:
-            juego=vg.pedirdatos()
-            inventario.append(juego)
-
-
-menu()
+# Mostrar inventario
+for v in inventario:
+    print(v.codigo, v.nombre, v.plataforma, v.stock)
